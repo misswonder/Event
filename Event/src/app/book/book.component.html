@@ -1,0 +1,109 @@
+<div class="row">
+    <div class="col-md-6 offset-md-3 mt-1">
+        <div class="card-bg-white">
+            <div class="card-header text-center" style="font-family: Courier New, Courier, monospace"></div>
+            <!-- THE SELECTED EVENT-->
+            <h4 id="eventName">
+                Book your {{eventName}}
+            <!-- EVENT NAME -->
+                with us!!
+            </h4>
+        </div>
+
+        <div class="card-body">
+                    <!-- BIND THE HTML form to bookingForm instance and invoke book() method on form submission-->
+            <form class="form-group" [formGroup]="bookingForm" (ngSubmit)="book()">
+                <!--
+                        Create input fields with appropriate labels and form controls and 
+                        render the error messages for incorrect input only if the field is dirty and has invalid data
+                    -->
+
+                <div class="form-group">
+                <!-- FORM CONTROL ==> eventId -->
+                    <label for="eventId"> Event Id</label>
+                    <input type="number" formControlName="eventId">
+                    <!-- <input type="number" formControlName="eventId" [disabled]="true"> -->
+                </div>
+
+                <div class="form-group">
+                    <!-- FORM CONTROL ==> venue -->
+                    <!-- 
+                            1. it should be a dropdown with first option as "-- Select Venue --" having values as (empty string i.e. "")
+                            2. all other options should be dynamically populated using locations array
+                            3. value for each option should be also same as the elements in locations array
+                            e.g if New York is an  option, it should be displayed as New York and value should also be New York
+                        -->
+                        <label for="venue">Choose Venue</label>
+                        <select formControlName="venue">
+                            <option value="">-- Select Venue --</option>
+                            <option *ngFor="let location of locations" [ngValue]="location">
+                                {{location}}
+                            </option>
+                         </select>
+
+                    <div id="venueError" class="alert alert-danger" *ngIf="bookingForm.get('venue').dirty && bookingForm.get('venue').errors">
+                        <!-- Message for required error ==> Field Required -->
+                        <p [hidden]="!bookingForm.get('venue').errors.required">
+                            Field Required
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailId">Email-ID</label>
+                    <input formControlName="emailId" placeholder="Enter your Email-ID">
+                    <!-- Message for required error ==> Field Required -->
+                    <div id="emailIdError" class="alert alert-danger" *ngIf="bookingForm.get('emailId').dirty && bookingForm.get('emailId').errors">
+                        <p [hidden]="!bookingForm.get('emailId').errors.required">
+                            Field Required
+                        </p>
+                    <!-- Message for pattern error ==> 'Invalid Email ID' -->
+                        <p [hidden]="!bookingForm.get('emailId').errors.emailError">
+                            Invalid Email ID
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Date</label>
+                    <input type="date" formControlName="date">
+                    <!-- FORM CONTROL ==> date, type should be date -->
+
+                    <div id="dateError" class="alert alert-danger" *ngIf="bookingForm.get('date').dirty && bookingForm.get('date').errors">
+                        <!-- Message for required error ==> Field Required -->
+                        <p [hidden]="!bookingForm.get('date').errors.required">
+                            Field Required
+                        </p>
+                        <!-- Message for dateError ==> 'You cannot book event for present or past date' -->
+                        <p [hidden]="!bookingForm.get('date').errors">
+                            You cannot book event for present or past date
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" id="bookEventBtn" [disabled]="bookingForm.invalid">
+                        Book Event
+                    </button>
+                    <button type="button" class="btn btn-warning" id="chooseEventBtn" (click)="chooseEvent()">
+                    <!-- <button type="button" class="btn btn-warning" id="chooseEventBtn" [routerLink]=["home"]> -->
+                        Choose Event
+                    </button>
+                </div>
+
+            </form>
+            <div *ngIf="successMessage" class="alert alert-success" id="successMessage">
+            <!-- <div class="text-success" id="successMessage"> -->
+                <!-- SUCCESS MESSAGE COMES HERE -->
+                {{successMessage}}
+            </div>
+            <div *ngIf="errorMessage" class="alert alert-danger" id="errorMessage">
+            <!-- <div class="text-danger" id="errorMessage"> -->
+                <!-- ERROR MESSAGE COMES HERE -->
+                <!-- <p [hidden]="!bookingForm.errors"> -->
+                {{errorMessage}}
+            <!-- </p> -->
+            </div>
+        </div>
+    </div>
+</div>
